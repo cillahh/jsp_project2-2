@@ -14,6 +14,15 @@
 <html>
 <head>
     <title>Title</title>
+    <script>
+        function delete_ok(id) {
+            var a = confirm("정말로 삭제하시겠습니까?");
+            if(a) {
+                // 확인을 누르면 delete_ok.jsp로 id를 가지고 이동
+                location.href = 'delete_ok.jsp?id=' + id;
+            }
+        }
+    </script>
 </head>
 <body>
 <%
@@ -30,6 +39,7 @@
         <th>적요</th>
         <th>금액</th>
         <th>작성일</th>
+        <th>삭제</th>
     </tr>
     <c:forEach items="${list}" var="u">
         <tr>
@@ -39,6 +49,7 @@
             <td>${u.briefs}</td>
             <td>${u.amount}</td>
             <td>${u.regdate}</td>
+            <td><a href="javascript:delete_ok('${u.id}')">삭제</a></td>
         </tr>
     </c:forEach>
 </table>
