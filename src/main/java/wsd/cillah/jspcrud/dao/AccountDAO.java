@@ -6,6 +6,8 @@ import wsd.cillah.jspcrud.common.JDBCUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AccountDAO {
@@ -14,6 +16,49 @@ public class AccountDAO {
     ResultSet rs = null;
 
     private final String ACCOUNT_INSERT = "INSERT INTO ACCOUNT (date, category, briefs, amount) VALUES (?, ?, ?, ?)";
+    private final String ACCOUNT_LIST = "select * from ACCOUNT order by date";
+    private final String ACCOUNT_DELETE = "delete from ACCOUNT where id=?";
+
+    public List<AccountVO> getAccountList(){
+
+        List<AccountVO> list = new ArrayList<AccountVO>();
+        try {
+            conn = JDBCUtil.getConnection();
+            stmt = conn.prepareStatement(ACCOUNT_LIST);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                AccountVO account = new AccountVO();
+                account.setId(rs.getInt("id"));
+                account.setDate(rs.getDate("date"));
+                account.setCategory(rs.getString("category"));
+                account.setBriefs(rs.getString("briefs"));
+                account.setAmount(rs.getInt("amount"));
+                account.setRegdate(rs.getDate("regdate"));
+
+                list.add(account);
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
+
+    public void deleteAccount(int id) {
+        try {
+            conn = JDBCUtil.getConnection();
+            stmt = conn.prepareStatement(ACCOUNT_DELETE);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 자원 해제 (필수)
+            JDBCUtil.close(conn);
+        }
+    }
 
     public int insertAccount(AccountVO vo) {
         System.out.println("Inside insetAccount");
@@ -30,11 +75,6 @@ public class AccountDAO {
             e.printStackTrace();
         }
         return 0;
-    }
-
-    public List<AccountVO > getAccountList() {
-
-        return null;
     }
 
 //    public static void main(String[] args) {
