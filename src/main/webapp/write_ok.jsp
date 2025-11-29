@@ -14,7 +14,7 @@
 <jsp:setProperty name="u" property="*"/>
 
 <%
-    String dateStr = request.getParameter("reg_date_str");
+    String dateStr = request.getParameter("date_str");
     if(dateStr != null && !dateStr.equals("")) {
         // "2025-11-29"문자열을 java.sql.Date로 변환
         java.sql.Date date = java.sql.Date.valueOf(dateStr);
@@ -22,7 +22,7 @@
     }
     AccountDAO accountDAO = new AccountDAO();
     int i = accountDAO.insertAccount(u);
-    String msg = "데이터 추가 성공 !";
+    String msg = "거래 내역이 추가되었습니다.";
     if(i==0) msg = "[error] 데이터 추가";
 %>
 <script language="JavaScript">
