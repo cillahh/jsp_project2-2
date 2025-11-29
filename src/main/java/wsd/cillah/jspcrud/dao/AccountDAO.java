@@ -17,6 +17,7 @@ public class AccountDAO {
 
     private final String ACCOUNT_INSERT = "INSERT INTO ACCOUNT (date, category, briefs, amount) VALUES (?, ?, ?, ?)";
     private final String ACCOUNT_LIST = "select * from ACCOUNT order by date";
+    private final String ACCOUNT_DELETE = "delete from ACCOUNT where id=?";
 
     public List<AccountVO> getAccountList(){
 
@@ -41,6 +42,22 @@ public class AccountDAO {
             e.printStackTrace();
         }
         return list;
+    }
+
+
+
+    public void deleteAccount(int id) {
+        try {
+            conn = JDBCUtil.getConnection();
+            stmt = conn.prepareStatement(ACCOUNT_DELETE);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 자원 해제 (필수)
+            JDBCUtil.close(conn);
+        }
     }
 
     public int insertAccount(AccountVO vo) {
